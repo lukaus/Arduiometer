@@ -34,6 +34,7 @@ void loop()
   if(pinState==HIGH)
   {
     thisHit = currentMillis - lastHit;
+    lastHit=thisHit;
     totalHits+=1;
     convert(thisHit);
   }
