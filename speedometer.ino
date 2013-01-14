@@ -5,16 +5,18 @@
 
 //pin stuffs
 int inputPin=8;       // pin to read hits
-int lastHit=0;        // stores last hit (ms)
-int thisHit=0;        //this hit (ms)
+double lastHit=0;        // stores last hit (ms)
+double thisHit=0;        //this hit (ms)
 int pinState=0;       //reads input pin
 int totalHits=0;
 
 //mathing
-int mph=0;                   // Miles Per Hours; displayed
+double mph=0;                   // Miles Per Hours; displayed
 double tireRadius=12.5;      //tire radius in inches (12.5 inches in my case)
-double tireCircumference= 2 * 3.14159265358979323846264338327950 * tireRadius; //calculates tire circumference
-int inchPerSec=0;            //for calculating MPH
+double tireCircumference= (double) 2.0 * 3.14159265358979323846264338327950 * tireRadius; //calculates tire circumference
+double hps=0;
+double inches=0;
+
 
 //more math and ?debouncing? hopefully maybe
 long previousMillis = 0;    //for counting seconds with interval
@@ -29,22 +31,30 @@ void setup()
 void loop()
 {
   
-  unsigned long currentMillis = millis();
+  unsigned int currentMillis = millis();
   pinState=digitalRead(inputPin);
+  
   if(pinState==HIGH)
   {
-    thisHit = currentMillis - lastHit;
-    lastHit=thisHit;
-    totalHits+=1;
-    convert(thisHit);
+      thisHit = currentMillis - lastHit;
+      if(thisHit >=100)
+      {
+        lastHit=thisHit;
+        totalHits+=1;
+        convert((double)thisHit);
+      }
   }
-  Serial.println(mph);
-  delay(1);
 }
 
-int convert(int hitMillis)      // converts millisecond since last hit to mph
+int convert(double hitMillis)      // converts millisecond since last hit to mph
 {
-  double hps = 1000/hitMillis;
-  double inches = hps * tireCircumference;
-  mph = inches * (5/88); //convert hits per second to miles per hour
+//  hitMillis=500.0;
+  
+  hps = (double) 1000.0 / hitMillis;
+
+  inches = (double) hps * tireCircumference;
+  
+  mph = (double) inches * (5.0/88.0); //convert hits per second to miles per hour
+  Serial.println(mph);
+  return mph;
 }
