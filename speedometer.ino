@@ -30,18 +30,16 @@ void setup()
 
 void loop()
 {
-  
-  unsigned int currentMillis = millis();
   pinState=digitalRead(inputPin);
   
   if(pinState==HIGH)
   {
-      thisHit = currentMillis - lastHit;
-      if(thisHit >=100)
+      thisHit = millis() - lastHit;   //compares current time in milliseconds to the last time this was triggered to get the time between in milliseconds, which is then converted
+      if(thisHit >=100)      // makes sure another signal isn't coming in too soon 
       {
-        lastHit=thisHit;
-        totalHits+=1;
-        convert((double)thisHit);
+        lastHit=thisHit; //sets this signal time in ms to the one to compare to next time
+        totalHits+=1;    //counts number of revolutions total, for debugging
+        convert((double)thisHit);  //converst the time into MPH
       }
   }
 }
